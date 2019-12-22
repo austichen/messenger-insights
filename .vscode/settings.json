@@ -1,0 +1,10 @@
+{
+    "python.pythonPath": "env\\Scripts\\python.exe",
+    "search.exclude": {
+        "**/.git": true,
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/tmp": true,
+        "**/env": true
+    },
+}
