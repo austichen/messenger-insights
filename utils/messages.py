@@ -3,7 +3,7 @@ import time
 import pandas as pd
 from collections import defaultdict
 from .files import get_files_by_path, get_folders_by_path, get_folder_by_chat_id
-from .constants import CSV_PATH, CSV_PATH_UNPARTITIONED
+from .constants import CSV_PATH, RAW_CSV_PATH
 from .csv_utils import read_csvs_in_folder
 
 def get_start_end_years():
@@ -11,6 +11,12 @@ def get_start_end_years():
     years = list(map(lambda f: int(f.split('\\')[-1]), folders))
     years.sort()
     return (years[0], years[-1])
+
+def get_all_chat_ids():
+    folders = get_folders_by_path(os.path.join(RAW_CSV_PATH, 'dm'))
+    folders.extend(get_folders_by_path(os.path.join(RAW_CSV_PATH, 'group_chat')))
+    chat_ids = [f.split('\\')[-1] for f in folders]
+    return chat_ids
 
 def count_messages(folder, partition_by_sender=False, sender_name=None):
     files = get_files_by_path(folder, traverse_subdirs=True)

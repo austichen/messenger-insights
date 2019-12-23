@@ -2,14 +2,16 @@ import os
 import json
 import time
 
-root_dir = 'D:/facebook_data/raw/messages/inbox'
-year_partitioned_output_path = 'D:/facebook_data/partitioned/messages'
+from fb_data_directory import FB_DATA_DIRECTORY
+
+input_dir = os.path.join(FB_DATA_DIRECTORY, 'inbox')
+output_dir = os.path.join(FB_DATA_DIRECTORY, 'partitioned', 'csv')
 
 def get_year_from_ts(ts):
     return time.ctime(ts//1000).split(' ')[-1]
 
 def get_output_filename(year, chat_type, dir, filename):
-    return os.path.join(year_partitioned_output_path, year, chat_type, dir, filename)
+    return os.path.join(output_dir, year, chat_type, dir, filename)
 
 def write_message_file(filename, particpants, messages):
     print('Writing ' + filename)
@@ -21,16 +23,16 @@ def write_message_file(filename, particpants, messages):
     json.dump({'participants': particpants, 'messages': messages}, output_f)
     output_f.close()
 
-def partition_messages_by_year(directory, filename):
+def partition_file(directory, filename):
     file = os.path.join(directory, filename)
     print('Partitioning ' + file)
-    root = directory.split('\\')[-1]
+    chat_id = directory.split('\\')[-1]
     f = open(file, 'r')
     data = json.load(f)
     f.close()
     chat_type = 'group_chat' if len(data['participants']) > 2 else 'dm'
     messages = data['messages']
-    if len(messages) <= 2:
+    if len(messages) <= 2 or 'facebookuser' in chat_id:
         return
     
     current_year = get_year_from_ts(messages[0]['timestamp_ms'])
@@ -38,20 +40,25 @@ def partition_messages_by_year(directory, filename):
     for message in messages:
         year = get_year_from_ts(message['timestamp_ms'])
         if year != current_year:
-            output_fname = get_output_filename(current_year, chat_type, root, filename)
+            output_fname = get_output_filename(current_year, chat_type, chat_id, filename)
             write_message_file(output_fname, data['participants'], msgs)
             msgs = []
             current_year = year
         msgs.append(message)
-    output_fname = get_output_filename(current_year, chat_type, root, filename)
+    output_fname = get_output_filename(current_year, chat_type, chat_id, filename)
     write_message_file(output_fname, data['participants'], msgs)
     
 # Creates a copy of the data in the specified folder that's partitioned by year
-def process():
-    for root, dirs, files in os.walk(root_dir):
+def partition_data_by_year(_input_dir, _output_dir):
+    global input_dir, output_dir
+    if _input_dir != None:
+        input_dir = _input_dir
+    if _output_dir != None:
+        output_dir = _output_dir
+    for root, dirs, files in os.walk(input_dir):
         for f in files:
             if f.startswith('message_'):
-                partition_messages_by_year(root, f)
+                partition_file(root, f)
 
 if __name__ == "__main__":
-    process()
+    partition_data_by_year()

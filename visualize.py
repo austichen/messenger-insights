@@ -1,6 +1,5 @@
 import os
 import heapq
-import fire
 import matplotlib.pyplot as plt
 import matplotlib.dates as dates
 import numpy as np
@@ -13,14 +12,14 @@ from utils.graphs import *
 
 register_matplotlib_converters()
 
-def total_messages_per_year(start_year=2010, end_year=2019, partition=False):
-    if not partition:
+def total_messages_per_year(start_year=2010, end_year=2019, partition_by_sender=False):
+    if not partition_by_sender:
         messages = []
         for year in range(start_year, end_year+1):
             year_path = get_path_for_year(year)
             messages.append((str(year), count_messages(year_path)))
         simple_bar_graph(list(map(lambda x: x[0], messages)), list(map(lambda x: x[1], messages)), 'Year', 'Number of Messages', 'Total Messages by Year')
-    if partition:
+    if partition_by_sender:
         dm_messages = []
         gc_messages = []
         for year in range(start_year, end_year+1):
@@ -124,8 +123,8 @@ def top_k_messages_in_range(start_year, end_year, k=10, group_chat=False, partit
                 if len(top_k_messages) == k-1:
                     heapq.heapify(top_k_messages)
             else:
-                if v[0] > top_k_messages[0][0]:
-                    heapq.heappush(top_k_messages, v)
+                if v > top_k_messages[0][0]:
+                    heapq.heappush(top_k_messages, (v, key))
                     heapq.heappop(top_k_messages)
         top_k_messages = heapq.nsmallest(k, top_k_messages)
         plot_x = list(map(lambda x: get_id_from_path(x[1], clean=True), top_k_messages))
@@ -156,23 +155,14 @@ def chat_frequency_per_month(chat_id, partition_by_sender=True):
     else:
         simple_time_graph(month_counts, 'Date', 'Number of Messages', 'Chat Message Frequency by Time')
 
-def main():
-    chat_frequency_per_month('sticklovers_k8iv8lm1jq', partition_by_sender=True)
+# def main():
+    # chat_frequency_per_month('sticklovers_k8iv8lm1jq', partition_by_sender=True)
     # group_chat_message_distribution_by_year(2019, '')
     # top_k_messages_all_time(partition_by_sender=True)
-    # top_k_messages_in_range(2014, 2017, k=10)
+    # top_k_messages_in_range(2014, 2017, k=10, group_chat=True)
     # top_k_most_messages_by_year(2019, partition_by_sender=False)
     # total_messages_per_year(partition=False)
     # folders = get_folders_by_year(2011)
     # convos = pd.read_csv(files[0], quotechar='`')
     # print(convos.head())
 
-if __name__ == "__main__":
-    fire.Fire({
-        'chat_frequency_per_month': chat_frequency_per_month,
-        'group_chat_message_distribution_by_year': group_chat_message_distribution_by_year,
-        'top_k_messages_all_time': top_k_messages_all_time,
-        'top_k_messages_in_range': top_k_messages_in_range,
-        'top_k_most_messages_by_year': top_k_most_messages_by_year,
-        'total_messages_per_year': total_messages_per_year,
-    })
