@@ -1,8 +1,8 @@
 import os
 import pandas as pd
 
-def read_csv_file(filename):
-    return pd.read_csv(filename, quotechar='`', encoding='utf-8')
+def read_csv_in_folder(folder):
+    return pd.read_csv(os.path.join(folder, 'messages.csv'), quotechar='`', encoding='utf-8')
 
 def read_csvs_in_folder(folder):
     files = os.listdir(folder)

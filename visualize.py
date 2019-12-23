@@ -1,5 +1,6 @@
 import os
 import heapq
+import fire
 import matplotlib.pyplot as plt
 import matplotlib.dates as dates
 import numpy as np
@@ -51,8 +52,9 @@ def top_k_most_messages_by_year(year, k=10, group_chat=False, partition_by_sende
                 if len(messages) == k-1:
                     heapq.heapify(messages)
             else:
-                heapq.heappushpop(messages, (my_count + sender_count, sender_name, my_count, sender_count))
-                
+                if my_count + sender_count > messages[0][0]:
+                    heapq.heappush(messages, (my_count + sender_count, sender_name, my_count, sender_count))
+                    heapq.heappop(messages)
         messages = heapq.nsmallest(k, messages)
         plot_x = list(map(lambda x: x[1], messages))
         my_plot_y = list(map(lambda x: x[2], messages))
@@ -66,7 +68,10 @@ def top_k_most_messages_by_year(year, k=10, group_chat=False, partition_by_sende
                 if len(messages) == k-1:
                     heapq.heapify(messages)
             else:
-                heapq.heappushpop(messages, (count_messages(f), get_id_from_path(f, clean=True)))
+                count = count_messages(f)
+                if count > messages[0][0]:
+                    heapq.heappush(messages, (count, get_id_from_path(f, clean=True)))
+                    heapq.heappop(messages)
         messages = heapq.nsmallest(k, messages)
         plot_x = list(map(lambda x: x[1], messages))
         plot_y = list(map(lambda x: x[0], messages))
@@ -96,7 +101,9 @@ def top_k_messages_in_range(start_year, end_year, k=10, group_chat=False, partit
                 if len(top_k_messages) == k-1:
                     heapq.heapify(top_k_messages)
             else:
-                heapq.heappushpop(top_k_messages, v)
+                if v[0] > top_k_messages[0][0]:
+                    heapq.heappush(top_k_messages, v)
+                    heapq.heappop(top_k_messages)
         top_k_messages = heapq.nsmallest(k, top_k_messages)
         my_plot_y = list(map(lambda x: x[2], top_k_messages))
         sender_plot_y = list(map(lambda x: x[3], top_k_messages))
@@ -117,7 +124,9 @@ def top_k_messages_in_range(start_year, end_year, k=10, group_chat=False, partit
                 if len(top_k_messages) == k-1:
                     heapq.heapify(top_k_messages)
             else:
-                heapq.heappushpop(top_k_messages, (v, key))
+                if v[0] > top_k_messages[0][0]:
+                    heapq.heappush(top_k_messages, v)
+                    heapq.heappop(top_k_messages)
         top_k_messages = heapq.nsmallest(k, top_k_messages)
         plot_x = list(map(lambda x: get_id_from_path(x[1], clean=True), top_k_messages))
         plot_y = list(map(lambda x: x[0], top_k_messages))
@@ -148,7 +157,7 @@ def chat_frequency_per_month(chat_id, partition_by_sender=True):
         simple_time_graph(month_counts, 'Date', 'Number of Messages', 'Chat Message Frequency by Time')
 
 def main():
-    chat_frequency_per_month('', partition_by_sender=True)
+    chat_frequency_per_month('sticklovers_k8iv8lm1jq', partition_by_sender=True)
     # group_chat_message_distribution_by_year(2019, '')
     # top_k_messages_all_time(partition_by_sender=True)
     # top_k_messages_in_range(2014, 2017, k=10)
@@ -159,4 +168,11 @@ def main():
     # print(convos.head())
 
 if __name__ == "__main__":
-    main()
+    fire.Fire({
+        'chat_frequency_per_month': chat_frequency_per_month,
+        'group_chat_message_distribution_by_year': group_chat_message_distribution_by_year,
+        'top_k_messages_all_time': top_k_messages_all_time,
+        'top_k_messages_in_range': top_k_messages_in_range,
+        'top_k_most_messages_by_year': top_k_most_messages_by_year,
+        'total_messages_per_year': total_messages_per_year,
+    })

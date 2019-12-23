@@ -2,7 +2,7 @@ import os
 import time
 import pandas as pd
 from collections import defaultdict
-from .files import get_files_by_path, get_folders_by_path
+from .files import get_files_by_path, get_folders_by_path, get_folder_by_chat_id
 from .constants import CSV_PATH, CSV_PATH_UNPARTITIONED
 from .csv_utils import read_csvs_in_folder
 
@@ -44,7 +44,7 @@ def count_messages(folder, partition_by_sender=False, sender_name=None):
 
 def count_messages_by_month(chat_id, partition_by_sender=False):
     # start_year, end_year = get_start_end_years()
-    folder = os.path.join(CSV_PATH_UNPARTITIONED, chat_id)
+    folder = get_folder_by_chat_id(chat_id)
     df = read_csvs_in_folder(folder)
     ts_datetime = pd.to_datetime(df['timestamp_ms'], unit='ms')
     df['timestamp_monthyear_string'] = ts_datetime.dt.strftime('%B/%Y')
