@@ -4,7 +4,7 @@ CLI tool to calculate and display cool stats about your messenger history 👀
 
 ![messenger-cli](https://user-images.githubusercontent.com/35405685/71392995-5eb05700-25d8-11ea-8257-7d536fd77516.gif)
 ![image](https://user-images.githubusercontent.com/35405685/71393067-b6e75900-25d8-11ea-83cf-f869c1492f9b.png)
-
+(^ fake data btw)
 
 ## Usage
 
