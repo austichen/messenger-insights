@@ -6,6 +6,9 @@ CLI tool to calculate and display cool stats about your messenger history 👀
 ![image](https://user-images.githubusercontent.com/35405685/71393067-b6e75900-25d8-11ea-83cf-f869c1492f9b.png)
 (^ fake data btw)
 
+![active_times](https://user-images.githubusercontent.com/35405685/71400004-7e08ad80-25f3-11ea-972b-c8b0b396e223.gif)
+![image](https://user-images.githubusercontent.com/35405685/71400035-8eb92380-25f3-11ea-9273-0a45d8c584bf.png)
+
 ## Usage
 
 1. [Download your Facebook Messenger data](https://www.zapptales.com/en/download-facebook-messenger-chat-history-how-to/). Extract the files to a directory of your choice. After you're done, your directory should have the following structure:
