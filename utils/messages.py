@@ -41,11 +41,8 @@ def count_messages(folder, partition_by_sender=False, sender_name=None):
     else:
         total = 0
         for f in files:
-            csv = open(f, 'r', encoding='utf-8')
-            for i, l in enumerate(csv):
-                pass
-            csv.close()
-            total += i
+            convos = pd.read_csv(f, quotechar='`', usecols=['sender_name'])
+            total += len(convos.index)
         return total
 
 def count_messages_by_month(chat_id, partition_by_sender=False):
