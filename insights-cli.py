@@ -33,6 +33,14 @@ def match_chat_id(chat_id):
     return False
 
 funcs = {
+    'Most active time of day': {
+        'function': most_active_time_of_day,
+        'prompts': ['chat_id_vs_all', 'conditional_chat_id', 'start_year', 'end_year']
+    },
+    'Compare most active times of day by year': {
+        'function': compare_most_active_times_of_day,
+        'prompts': ['chat_id_vs_all', 'conditional_chat_id', 'year_list']
+    },
     'Chat frequency per month': {
         'function': chat_frequency_per_month,
         'prompts': ['chat_id', 'partition_by_sender']
@@ -111,13 +119,33 @@ parameter_prompts = {
         'filter': lambda x: int(x),
         'validate': lambda x: True if int(x) >= START_YEAR and int(x) <= END_YEAR else 'Year must be in the range (' + START_YEAR + ', ' + END_YEAR + ')'
     },
+    'year_list': {
+        'type': 'checkbox',
+        'name': 'year_list',
+        'message': 'Please select the years you would like to compare',
+        'choices': [{'key':str(year), 'name': str(year), 'value': year} for year in range(START_YEAR, END_YEAR+1)]
+    },
     'chat_id': {
         'type': 'input',
         'name': 'chat_id',
         'message': 'Please enter the chat id for the chat you want to view',
         'filter': match_chat_id,
         'validate': validate_chat_id
-    }
+    },
+    'conditional_chat_id': {
+        'type': 'input',
+        'name': 'chat_id',
+        'message': 'Please enter the chat id for the chat you want to view',
+        'filter': match_chat_id,
+        'validate': validate_chat_id,
+        'when': lambda answers: answers['chat_id'] == True
+    },
+    'chat_id_vs_all': {
+        'type': 'confirm',
+        'name': 'chat_id',
+        'message': 'Do you want to specify a specific chat_id?',
+        'default': False
+    },
 }
 
 get_func = [
@@ -129,12 +157,12 @@ get_func = [
     }
 ]
 
-
-answers = prompt(get_func, style=style)
-# print(answers['func'])
-func = funcs[answers['func']]['function']
-func_prompts = [parameter_prompts[p] for p in funcs[answers['func']]['prompts']]
-# pprint(func_prompts)
-answers = prompt(func_prompts, style=style)
-# print(answers)
-func(**answers)
+if __name__ == '__main__':
+    answers = prompt(get_func, style=style)
+    # print(answers['func'])
+    func = funcs[answers['func']]['function']
+    func_prompts = [parameter_prompts[p] for p in funcs[answers['func']]['prompts']]
+    # pprint(func_prompts)
+    answers = prompt(func_prompts, style=style)
+    # print(answers)
+    func(**answers)

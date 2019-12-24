@@ -4,7 +4,7 @@ import pandas as pd
 from collections import defaultdict
 from .files import get_files_by_path, get_folders_by_path, get_folder_by_chat_id
 from .constants import CSV_PATH, RAW_CSV_PATH
-from .csv_utils import read_csvs_in_folder
+from .csv_utils import read_csv_in_folder
 
 def get_start_end_years():
     folders = get_folders_by_path(CSV_PATH)
@@ -48,7 +48,7 @@ def count_messages(folder, partition_by_sender=False, sender_name=None):
 def count_messages_by_month(chat_id, partition_by_sender=False):
     # start_year, end_year = get_start_end_years()
     folder = get_folder_by_chat_id(chat_id)
-    df = read_csvs_in_folder(folder)
+    df = read_csv_in_folder(folder)
     ts_datetime = pd.to_datetime(df['timestamp_ms'], unit='ms')
     df['timestamp_monthyear_string'] = ts_datetime.dt.strftime('%B/%Y')
     start = pd.to_datetime(str(ts_datetime.min()))
@@ -70,3 +70,22 @@ def count_messages_by_month(chat_id, partition_by_sender=False):
         month_count.index = pd.DatetimeIndex(month_count.index)
         month_count = month_count.reindex(dates, fill_value = 0).sort_index()
         return month_count
+
+def get_hourly_count(folder, start_year, end_year):
+    def military_clock_to_standard(hour):
+        if hour == 0:
+            return '12am'
+        elif hour == 12:
+            return '12pm'
+        elif hour < 12:
+            return str(hour) + 'am'
+        elif hour < 24:
+            return str(hour - 12) + 'pm'
+    df = read_csv_in_folder(folder)
+    df['datetime'] = pd.to_datetime(df['timestamp_ms'], unit='ms').dt.tz_localize('UTC').dt.tz_convert('US/Eastern')
+    df['hour'] = df['datetime'].dt.hour.map(military_clock_to_standard)
+    df['year'] = df['datetime'].dt.year
+    df = df[(df.year >= start_year) & (df.year <= end_year)]
+    series = df.groupby('hour').size()
+    series = series.reindex([military_clock_to_standard(hour) for hour in range(0,24)], fill_value=0)
+    return series

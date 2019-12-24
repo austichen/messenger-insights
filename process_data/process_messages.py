@@ -41,4 +41,4 @@ def main():
             process(os.path.join(root, d))
 
 if __name__ == "__main__":
-    process('D:\\facebook_data\\raw\\csv\\messages\\dm\\emilyzhang_tpohg3gi0a')
+    pass

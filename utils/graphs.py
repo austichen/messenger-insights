@@ -39,8 +39,9 @@ def partitioned_bar_graph(x, y1, y2, y1_legend, y2_legend, x_label, y_label, tit
     ax.set_xticklabels(x, rotation=30)
     ax.legend()
 
-    autolabel(rects1)
-    autolabel(rects2)
+    if show_labels:
+        autolabel(rects1)
+        autolabel(rects2)
 
     fig.tight_layout()
     plt.grid(axis='y')
@@ -54,15 +55,17 @@ def simple_time_graph(time_series, x_label, y_label, title):
     plt.grid(axis='y')
     plt.show()
 
-def multiple_time_graphs(lines, x_label, y_label, title):
+def multiple_line_graphs(lines, x_label, y_label, title, sort_x_values=False, x_grid=True, y_grid=True):
     fig, ax = plt.subplots()
     for sender, series in lines:
         # print(count.head())
-        series.sort_index(inplace=True)
+        if sort_x_values:
+            series.sort_index(inplace=True)
         ax.plot(series, label=sender)
     ax.legend()
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.title(title)
-    plt.grid(axis='y')
+    if y_grid: plt.grid(axis='y')
+    if x_grid: plt.grid(axis='x')
     plt.show()

@@ -7,11 +7,35 @@ import pandas as pd
 from pandas.plotting import register_matplotlib_converters
 from collections import defaultdict
 from utils.files import *
-from utils.messages import count_messages, get_start_end_years, count_messages_by_month
+from utils.messages import count_messages, get_start_end_years, count_messages_by_month, get_hourly_count
 from utils.graphs import *
 
 register_matplotlib_converters()
 
+def compare_most_active_times_of_day(year_list, chat_id=None):
+    folders = get_all_folders() if not chat_id else [get_folder_by_chat_id(chat_id)]
+    lines = []
+    two_years_only = len(year_list) == 2
+    for year in year_list:
+        hourly_count_series = [get_hourly_count(f, year, year) for f in folders]
+        hourly_counts = pd.concat(hourly_count_series, axis=1, sort=False).sum(axis=1)
+        hourly_counts = hourly_counts.divide(other=sum(hourly_counts))
+        lines.append((str(year), hourly_counts))
+    title = 'Most Active Time of Day' if not chat_id else 'Most Active Time of Day for Chat ' + chat_id
+    title += ' by Year'
+    if two_years_only:
+        partitioned_bar_graph(lines[0][1].index, lines[0][1], lines[1][1], lines[0][0], lines[1][0], 'Hour', 'Porportion of Messages', title, show_labels=False)
+    else:
+        multiple_line_graphs(lines, 'Hour', 'Porportion of Messages', title)
+
+def most_active_time_of_day(chat_id=None, start_year=2010, end_year=2019):
+    folders = get_all_folders() if not chat_id else [get_folder_by_chat_id(chat_id)]
+    hourly_count_series = [get_hourly_count(f, start_year, end_year) for f in folders]
+    hourly_counts = pd.concat(hourly_count_series, axis=1, sort=False).sum(axis=1).astype('int')
+    title = 'Most Active Time of Day' if not chat_id else 'Most Active Time of Day for Chat ' + chat_id
+    title += ' from ' + str(start_year) + ' to ' + str(end_year)
+    simple_bar_graph(hourly_counts.index, hourly_counts, 'Hour', 'Number of Messages', title)
+    
 def total_messages_per_year(start_year=2010, end_year=2019, partition_by_sender=False):
     if not partition_by_sender:
         messages = []
@@ -151,7 +175,7 @@ def chat_frequency_per_month(chat_id, partition_by_sender=True):
 
     # x = np.array(month_counts.index)
     if partition_by_sender:
-        multiple_time_graphs(month_counts, 'Date', 'Number of Messages', 'Chat Message Frequency by Time')
+        multiple_line_graphs(month_counts, 'Date', 'Number of Messages', 'Chat Message Frequency by Time', sort_x_values=True, x_grid=False)
     else:
         simple_time_graph(month_counts, 'Date', 'Number of Messages', 'Chat Message Frequency by Time')
 
