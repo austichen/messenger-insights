@@ -1,11 +1,9 @@
 import os
-from json_to_csv import json_to_csv
-from combine_csvs import combine_csvs
-from partition_data_by_year import partition_data_by_year
-from partition_data_by_chattype import partition_data_by_chattype
-from fb_data_directory import FB_DATA_DIRECTORY, input_dir, CSV_PATH, RAW_CSV_PATH, JSON_PATH
-
-
+from process_data.json_to_csv import json_to_csv
+from process_data.combine_csvs import combine_csvs
+from process_data.partition_data_by_year import partition_data_by_year
+from process_data.partition_data_by_chattype import partition_data_by_chattype
+from utils.constants import FB_DATA_DIRECTORY, input_dir, CSV_PATH, RAW_CSV_PATH, JSON_PATH
 
 if __name__ == "__main__":
     input_dir = os.path.join(FB_DATA_DIRECTORY, 'inbox')

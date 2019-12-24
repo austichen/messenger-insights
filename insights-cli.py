@@ -1,17 +1,17 @@
 from __future__ import print_function, unicode_literals
 import re
 from pprint import pprint
-from visualize import *
+from visualize.visualize import *
 from PyInquirer import style_from_dict, Token, prompt, Separator
 from utils.messages import get_start_end_years, get_all_chat_ids
 
 style = style_from_dict({
     Token.Separator: '#cc5454',
     Token.QuestionMark: '#673ab7 bold',
-    Token.Selected: '#cc5454',  # default
+    Token.Selected: '#73ff75',  # default
     Token.Pointer: '#673ab7 bold',
     Token.Instruction: '',  # default
-    Token.Answer: '#f44336 bold',
+    Token.Answer: '#73ff75 bold',
     Token.Question: '',
 })
 

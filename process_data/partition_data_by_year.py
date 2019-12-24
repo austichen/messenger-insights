@@ -2,10 +2,7 @@ import os
 import json
 import time
 
-from fb_data_directory import FB_DATA_DIRECTORY
-
-input_dir = os.path.join(FB_DATA_DIRECTORY, 'inbox')
-output_dir = os.path.join(FB_DATA_DIRECTORY, 'partitioned', 'csv')
+output_dir = None
 
 def get_year_from_ts(ts):
     return time.ctime(ts//1000).split(' ')[-1]
@@ -49,10 +46,8 @@ def partition_file(directory, filename):
     write_message_file(output_fname, data['participants'], msgs)
     
 # Creates a copy of the data in the specified folder that's partitioned by year
-def partition_data_by_year(_input_dir, _output_dir):
-    global input_dir, output_dir
-    if _input_dir != None:
-        input_dir = _input_dir
+def partition_data_by_year(input_dir, _output_dir):
+    global output_dir
     if _output_dir != None:
         output_dir = _output_dir
     for root, dirs, files in os.walk(input_dir):

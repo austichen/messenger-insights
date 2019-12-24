@@ -3,10 +3,6 @@ import os
 import json
 import time
 
-from fb_data_directory import FB_DATA_DIRECTORY
-
-directory = os.path.join(FB_DATA_DIRECTORY, 'inbox')
-
 def get_year_from_ts(ts):
     return time.ctime(ts//1000).split(' ')[-1]
 
@@ -45,10 +41,7 @@ def convert_file_to_csv(directory, filename):
     os.remove(file)
 
 # Convert json files to csv files in the specified directory
-def json_to_csv(_directory):
-    global directory
-    if _directory:
-        directory = _directory
+def json_to_csv(directory):
     for root, dirs, files in os.walk(directory):
         for f in files:
             if f.startswith('message_') and f.split('.')[-1] == 'json':

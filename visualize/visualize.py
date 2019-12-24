@@ -155,14 +155,4 @@ def chat_frequency_per_month(chat_id, partition_by_sender=True):
     else:
         simple_time_graph(month_counts, 'Date', 'Number of Messages', 'Chat Message Frequency by Time')
 
-# def main():
-    # chat_frequency_per_month('sticklovers_k8iv8lm1jq', partition_by_sender=True)
-    # group_chat_message_distribution_by_year(2019, '')
-    # top_k_messages_all_time(partition_by_sender=True)
-    # top_k_messages_in_range(2014, 2017, k=10, group_chat=True)
-    # top_k_most_messages_by_year(2019, partition_by_sender=False)
-    # total_messages_per_year(partition=False)
-    # folders = get_folders_by_year(2011)
-    # convos = pd.read_csv(files[0], quotechar='`')
-    # print(convos.head())
 
