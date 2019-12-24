@@ -19,14 +19,17 @@ def get_path_for_year(year, file_type='csv'):
 def get_id_from_path(path, clean=False):
     return path.split('\\')[-1] if not clean else re.split("[^a-zA-Z0-9]", path.split('\\')[-1])[0]
 
-def get_files(year, user_id, group_chat=False, file_type='csv'):
-    path, chat_type = set_chattype_and_filetype(group_chat, file_type)
+def get_folder_by_user_and_year(year, user_id, file_type='csv'):
+    path, _ = set_chattype_and_filetype(False, file_type)
+    full_path_dm = os.path.join(path, str(year), 'dm', user_id)
+    full_path_gc = os.path.join(path, str(year), 'group_chat', user_id)
+    if os.path.exists(full_path_dm):
+        return full_path_dm
+    elif os.path.exists(full_path_gc):
+        return full_path_gc
+    else:
+        return None
 
-    full_path = os.path.join(path, str(year), chat_type, user_id)
-    if not os.path.exists(full_path):
-        raise Exception('Requested folder that does not exist: ' + full_path)
-    files = [os.path.join(full_path, f) for f in os.listdir(full_path) if os.path.isfile(os.path.join(full_path, f))]
-    return files
 
 def get_folders_by_path(path, traverse_subdirs=False):
     if not os.path.isdir(path):

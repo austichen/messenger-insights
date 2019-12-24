@@ -89,3 +89,14 @@ def get_hourly_count(folder, start_year, end_year):
     series = df.groupby('hour').size()
     series = series.reindex([military_clock_to_standard(hour) for hour in range(0,24)], fill_value=0)
     return series
+
+def get_monthly_count(folder, start_year, end_year):
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    df = read_csv_in_folder(folder)
+    df['datetime'] = pd.to_datetime(df['timestamp_ms'], unit='ms').dt.tz_localize('UTC').dt.tz_convert('US/Eastern')
+    df['month'] = df['datetime'].dt.month.map(lambda m: months[m-1])
+    df['year'] = df['datetime'].dt.year
+    df = df[(df.year >= start_year) & (df.year <= end_year)]
+    series = df.groupby('month').size()
+    series = series.reindex(months, fill_value=0)
+    return series

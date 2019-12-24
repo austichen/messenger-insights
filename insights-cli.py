@@ -33,13 +33,13 @@ def match_chat_id(chat_id):
     return False
 
 funcs = {
-    'Most active time of day': {
-        'function': most_active_time_of_day,
-        'prompts': ['chat_id_vs_all', 'conditional_chat_id', 'start_year', 'end_year']
+    'Most active time': {
+        'function': most_active_time,
+        'prompts': ['time', 'chat_id_vs_all', 'conditional_chat_id', 'start_year', 'end_year']
     },
-    'Compare most active times of day by year': {
-        'function': compare_most_active_times_of_day,
-        'prompts': ['chat_id_vs_all', 'conditional_chat_id', 'year_list']
+    'Compare most active time by year': {
+        'function': compare_most_active_time,
+        'prompts': ['time', 'chat_id_vs_all', 'conditional_chat_id', 'year_list']
     },
     'Chat frequency per month': {
         'function': chat_frequency_per_month,
@@ -124,6 +124,20 @@ parameter_prompts = {
         'name': 'year_list',
         'message': 'Please select the years you would like to compare',
         'choices': [{'key':str(year), 'name': str(year), 'value': year} for year in range(START_YEAR, END_YEAR+1)]
+    },
+    'time': {
+        'type': 'list',
+        'name': 'time',
+        'message': 'Do you want to check most active hour or month?',
+        'choices': [{
+            'key': 'hour',
+            'name': 'hour',
+            'value': 'hour'
+        }, {
+            'key': 'month',
+            'name': 'month',
+            'value': 'month' 
+        }]
     },
     'chat_id': {
         'type': 'input',
