@@ -2,6 +2,10 @@
 
 CLI tool to calculate and display cool stats about your messenger history 👀
 
+![messenger-cli](https://user-images.githubusercontent.com/35405685/71392995-5eb05700-25d8-11ea-8257-7d536fd77516.gif)
+![image](https://user-images.githubusercontent.com/35405685/71393067-b6e75900-25d8-11ea-83cf-f869c1492f9b.png)
+
+
 ## Usage
 
 1. [Download your Facebook Messenger data](https://www.zapptales.com/en/download-facebook-messenger-chat-history-how-to/). Extract the files to a directory of your choice. After you're done, your directory should have the following structure:
@@ -21,7 +25,7 @@ git clone https://github.com/austichen/messenger-insights.git
 cd messenger-insights
 ```
 
-3. In the `/utils/constants.py` file, change the `FB_DATA_DIRECTORY` variable to be the absolute path to the directory you specified in step 1. Using my example in step 1, I would update it to `FB_DATA_DIRECTORY='D:/yourpath/to/facebook-data'`
+3. In the `utils/constants.py` file, change the `FB_DATA_DIRECTORY` variable to be the absolute path to the directory you specified in step 1. Using my example in step 1, I would update it to `FB_DATA_DIRECTORY='D:/your/path/to/facebook-data'`
 
 4. In the root directory of `messenger-insights`, run
 ```
