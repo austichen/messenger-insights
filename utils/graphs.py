@@ -34,6 +34,7 @@ def partitioned_bar_graph(x, y1, y2, y1_legend, y2_legend, x_label, y_label, tit
     rects2 = ax.bar([pos + WIDTH/2 for pos in x_ind], y2, WIDTH, label=y2_legend)
 
     ax.set_ylabel(y_label)
+    ax.set_xlabel(x_label)
     ax.set_title(title)
     ax.set_xticks(x_ind)
     ax.set_xticklabels(x, rotation=30)
