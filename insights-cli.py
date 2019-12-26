@@ -33,6 +33,10 @@ def match_chat_id(chat_id):
     return False
 
 funcs = {
+    'Most frequent words': {
+        'function': word_frequency,
+        'prompts': ['chat_id', 'k', 'start_year', 'end_year']
+    },
     'Most active time': {
         'function': most_active_time,
         'prompts': ['time', 'chat_id_vs_all', 'conditional_chat_id', 'start_year', 'end_year']
@@ -71,7 +75,7 @@ parameter_prompts = {
     'k': {
         'type': 'input',
         'name': 'k',
-        'message': 'How many messages would you like to show?',
+        'message': 'How many items would you like to show?',
         'default': '10',
         'filter': lambda x: int(x)
     },

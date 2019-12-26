@@ -1,8 +1,10 @@
 import os
 import time
+import re
 import pandas as pd
-from collections import defaultdict
-from .files import get_files_by_path, get_folders_by_path, get_folder_by_chat_id
+from collections import defaultdict, Counter
+from nltk.corpus import stopwords
+from .files import get_files_by_path, get_folders_by_path, get_folder_by_chat_id, get_all_folders
 from .constants import CSV_PATH, RAW_CSV_PATH
 from .csv_utils import read_csv_in_folder
 
@@ -99,4 +101,48 @@ def get_monthly_count(folder, start_year, end_year):
     df = df[(df.year >= start_year) & (df.year <= end_year)]
     series = df.groupby('month').size()
     series = series.reindex(months, fill_value=0)
+    return series
+
+def get_word_frequencies(folder, start_year, end_year):
+    stop_words = set(stopwords.words('english'))
+    # stop_words.update(['u', 'i', 'lol', 'like', 'oh', 'ok', 'think', 'yes', 'i\'m', 'also', 'omg', 'one', 'get', 'ur', 'wow', 'lmao'])
+    avg_freq = get_average_word_frequencies()
+    word_counts = count_words_helper(folder)
+    word_counts = word_counts.divide(other=sum(word_counts))
+    # avg_freq = avg_freq.reindex(word_counts.index)
+    # print(word_counts.sort_values(ascending=False))
+    word_counts = word_counts.divide(avg_freq).sort_values(ascending=False)
+    # print(word_counts)
+    return word_counts
+
+def count_words_helper(f):
+    stop_words = set(stopwords.words('english'))
+    word_freq = Counter()
+    # print(f)
+    df = read_csv_in_folder(f)
+    content = df.content
+    # print(content)
+    for _, text in content.items():
+        # print(text)
+        try:
+            text = re.sub('[^a-zA-Z\s]', '', text.lower())
+        except AttributeError:
+            text = ''
+        word_freq.update(list(filter(lambda w: len(w) and w not in stop_words, text.split())))
+    word_freq = pd.Series(word_freq)
+    word_freq = word_freq.divide(other=sum(word_freq))
+    return word_freq
+
+def get_average_word_frequencies():
+    stop_words = set(stopwords.words('english'))
+    folders = get_all_folders(dm=False)
+    series_list = [count_words_helper(f) for f in folders]
+        # s = pd.Series(filter(lambda w: w not in stop_words, df.content.str.lower().str.split(expand=True).stack())).value_counts()[:100]
+        # s = s.divide(other=sum(s))
+        # series_list.append(s)
+    # word_freq = [(k, v) for k, v in reversed(sorted(word_freq.items(), key=lambda item: item[1]))]
+    series = pd.concat(series_list, axis=1, sort=False).mean(axis=1)
+    series.sort_values(inplace=True, ascending=False)
+    # print(series[:10])
+    # print('before')
     return series
