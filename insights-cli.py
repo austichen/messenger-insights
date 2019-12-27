@@ -20,6 +20,8 @@ VALID_CHAT_IDS = get_all_chat_ids()
 
 def validate_chat_id(chat_id):
     chat_id = re.sub('[^a-z0-9_-]', '', chat_id.lower())
+    if not len(chat_id):
+        return 'Invalid chat id'
     for valid_chat_id in VALID_CHAT_IDS:
         if chat_id in valid_chat_id.lower():
             return True
@@ -27,6 +29,8 @@ def validate_chat_id(chat_id):
 
 def match_chat_id(chat_id):
     chat_id = re.sub('[^a-z0-9_-]', '', chat_id.lower())
+    if not len(chat_id):
+        return False
     for valid_chat_id in VALID_CHAT_IDS:
         if chat_id in valid_chat_id.lower():
             return valid_chat_id
