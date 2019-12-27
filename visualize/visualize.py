@@ -16,7 +16,7 @@ def word_frequency(chat_id=None, k=10, start_year=2010, end_year=2019):
     f = files.get_folder_by_chat_id(chat_id)
     freqs = messages.get_word_frequencies(f, start_year, end_year)[:k]
     # freqs = pd.concat(freqs_list, axis=1, sort=False).sum(axis=1)[:10]
-    graphs.simple_bar_graph(freqs.index, freqs.round(2), 'Word', 'Relative Frequency to Mean', f'Word Frequency for {chat_id}')
+    graphs.simple_bar_graph(freqs.index, freqs.round(2), 'Word', 'Relative Frequency to Mean', f'Most Frequent Words for {chat_id}')
 
 def compare_most_active_time(year_list, chat_id=None, time='hour'):
     folders = files.get_all_folders() if not chat_id else [files.get_folder_by_chat_id(chat_id)]
@@ -52,11 +52,11 @@ def most_active_time(chat_id=None, start_year=2010, end_year=2019, time='hour'):
     
 def total_messages_per_year(start_year=2010, end_year=2019, partition_by_sender=False):
     if not partition_by_sender:
-        messages = []
+        messages_list = []
         for year in range(start_year, end_year+1):
             year_path = files.get_path_for_year(year)
-            messages.append((str(year), messages.count_messages(year_path)))
-        graphs.simple_bar_graph(list(map(lambda x: x[0], messages)), list(map(lambda x: x[1], messages)), 'Year', 'Number of Messages', 'Total Messages by Year')
+            messages_list.append((str(year), messages.count_messages(year_path)))
+        graphs.simple_bar_graph(list(map(lambda x: x[0], messages)), list(map(lambda x: x[1], messages_list)), 'Year', 'Number of Messages', 'Total Messages by Year')
     if partition_by_sender:
         dm_messages = []
         gc_messages = []
@@ -80,43 +80,43 @@ def total_messages_per_year(start_year=2010, end_year=2019, partition_by_sender=
 def top_k_most_messages_by_year(year, k=10, group_chat=False, partition_by_sender=False):
     folders = files.get_folders_by_year(year, group_chat=group_chat)
     if not group_chat and partition_by_sender:
-        messages = []
+        messages_list = []
         for f in folders:
             sender_name = files.get_id_from_path(f, clean=True)
             my_count, sender_count = messages.count_messages(f, partition_by_sender=True, sender_name=sender_name)
-            if len(messages) < k:
-                messages.append((my_count + sender_count, sender_name, my_count, sender_count))
-                if len(messages) == k-1:
-                    heapq.heapify(messages)
+            if len(messages_list) < k:
+                messages_list.append((my_count + sender_count, sender_name, my_count, sender_count))
+                if len(messages_list) == k-1:
+                    heapq.heapify(messages_list)
             else:
-                if my_count + sender_count > messages[0][0]:
-                    heapq.heappush(messages, (my_count + sender_count, sender_name, my_count, sender_count))
-                    heapq.heappop(messages)
-        messages = heapq.nsmallest(k, messages)
-        plot_x = list(map(lambda x: x[1], messages))
-        my_plot_y = list(map(lambda x: x[2], messages))
-        sender_plot_y = list(map(lambda x: x[3], messages))
+                if my_count + sender_count > messages_list[0][0]:
+                    heapq.heappush(messages_list, (my_count + sender_count, sender_name, my_count, sender_count))
+                    heapq.heappop(messages_list)
+        messages_list = heapq.nsmallest(k, messages_list)
+        plot_x = list(map(lambda x: x[1], messages_list))
+        my_plot_y = list(map(lambda x: x[2], messages_list))
+        sender_plot_y = list(map(lambda x: x[3], messages_list))
         graphs.partitioned_bar_graph(plot_x, my_plot_y, sender_plot_y, 'Me', 'Them', 'Person', 'Number of Messages', 'Top ' + str(k) + ' Most Messages in ' + str(year))
     else:
-        messages = []
+        messages_list = []
         for f in folders:
             if len(messages) < k:
-                messages.append((messages.count_messages(f), files.get_id_from_path(f, clean=True)))
+                messages_list.append((messages.count_messages(f), files.get_id_from_path(f, clean=True)))
                 if len(messages) == k-1:
                     heapq.heapify(messages)
             else:
                 count = messages.count_messages(f)
                 if count > messages[0][0]:
-                    heapq.heappush(messages, (count, files.get_id_from_path(f, clean=True)))
-                    heapq.heappop(messages)
-        messages = heapq.nsmallest(k, messages)
-        plot_x = list(map(lambda x: x[1], messages))
-        plot_y = list(map(lambda x: x[0], messages))
+                    heapq.heappush(messages_list, (count, files.get_id_from_path(f, clean=True)))
+                    heapq.heappop(messages_list)
+        messages_list = heapq.nsmallest(k, messages_list)
+        plot_x = list(map(lambda x: x[1], messages_list))
+        plot_y = list(map(lambda x: x[0], messages_list))
         graphs.simple_bar_graph(plot_x, plot_y, 'Group' if group_chat else 'Person', 'Number of Messages', 'Top ' + str(k) + ' Most Messages in ' + str(year))
 
 def top_k_messages_in_range(start_year, end_year, k=10, group_chat=False, partition_by_sender=False):
     if not group_chat and partition_by_sender:
-        messages = {}
+        messages_list = {}
         for year in range(start_year, end_year+1):
             folders = files.get_folders_by_year(year, group_chat=group_chat)
             for f in folders:
@@ -125,14 +125,14 @@ def top_k_messages_in_range(start_year, end_year, k=10, group_chat=False, partit
                 if name_id.startswith('facebookuser'):
                     continue
                 my_count, sender_count = messages.count_messages(f, partition_by_sender=True, sender_name=sender_name)
-                if name_id not in messages:
-                    messages[name_id] = [my_count + sender_count, sender_name, my_count, sender_count]
+                if name_id not in messages_list:
+                    messages_list[name_id] = [my_count + sender_count, sender_name, my_count, sender_count]
                 else:
-                    messages[name_id][0] += my_count + sender_count
-                    messages[name_id][2] += my_count
-                    messages[name_id][3] += sender_count
+                    messages_list[name_id][0] += my_count + sender_count
+                    messages_list[name_id][2] += my_count
+                    messages_list[name_id][3] += sender_count
         top_k_messages = []
-        for key, v in messages.items():
+        for key, v in messages_list.items():
             if len(top_k_messages) < k:
                 top_k_messages.append(v)
                 if len(top_k_messages) == k-1:
@@ -147,15 +147,15 @@ def top_k_messages_in_range(start_year, end_year, k=10, group_chat=False, partit
         plot_x = list(map(lambda x: x[1], top_k_messages))
         graphs.partitioned_bar_graph(plot_x, my_plot_y, sender_plot_y, 'Me', 'Them', 'Person', 'Number of Messages', 'Top ' + str(k) + ' Messages from ' + str(start_year) + ' to ' + str(end_year))
     else:
-        messages = defaultdict(int)
+        messages_list = defaultdict(int)
         for year in range(start_year, end_year+1):
             folders = files.get_folders_by_year(year, group_chat=group_chat)
             for f in folders:
                 if f.split('\\')[-1].startswith('facebookuser'):
                     continue
-                messages[f.split('\\')[-1]] += messages.count_messages(f)
+                messages_list[f.split('\\')[-1]] += messages.count_messages(f)
         top_k_messages = []
-        for key, v in messages.items():
+        for key, v in messages_list.items():
             if len(top_k_messages) < k:
                 top_k_messages.append((v, key))
                 if len(top_k_messages) == k-1:

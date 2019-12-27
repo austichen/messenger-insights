@@ -1,6 +1,7 @@
 import os
 import time
 import re
+import json
 import pandas as pd
 from collections import defaultdict, Counter
 from nltk.corpus import stopwords
@@ -65,7 +66,6 @@ def count_messages_by_month(chat_id, partition_by_sender=False):
             month_count.index = pd.DatetimeIndex(month_count.index)
             month_count = month_count.reindex(dates, fill_value = 0).sort_index()
             partitioned_messages.append((p, month_count))
-        # print(partitioned_messages)
         return partitioned_messages
     else:
         month_count = df.groupby('timestamp_monthyear_string')['timestamp_monthyear_string'].count()
@@ -105,22 +105,26 @@ def get_monthly_count(folder, start_year, end_year):
 
 def get_word_frequencies(folder, start_year, end_year):
     stop_words = set(stopwords.words('english'))
-    # stop_words.update(['u', 'i', 'lol', 'like', 'oh', 'ok', 'think', 'yes', 'i\'m', 'also', 'omg', 'one', 'get', 'ur', 'wow', 'lmao'])
     avg_freq = get_average_word_frequencies()
     word_counts = count_words_helper(folder)
     word_counts = word_counts.divide(other=sum(word_counts))
-    # avg_freq = avg_freq.reindex(word_counts.index)
-    # print(word_counts.sort_values(ascending=False))
     word_counts = word_counts.divide(avg_freq).sort_values(ascending=False)
-    # print(word_counts)
     return word_counts
 
-def count_words_helper(f):
+def count_words_helper(f, min_message_threshold=0):
     stop_words = set(stopwords.words('english'))
+    with open(os.path.join(f, 'metadata.json')) as metadata:
+        data = json.load(metadata)
+        participants = data['participants']
+        for p in participants:
+            stop_words.update(p.lower().split())
     word_freq = Counter()
-    # print(f)
     df = read_csv_in_folder(f)
     content = df.content
+
+    # convos with small amounts of messages mess up the sample
+    if len(content.index) < min_message_threshold:
+        return pd.Series([])
     # print(content)
     for _, text in content.items():
         # print(text)
@@ -135,14 +139,13 @@ def count_words_helper(f):
 
 def get_average_word_frequencies():
     stop_words = set(stopwords.words('english'))
-    folders = get_all_folders(dm=False)
-    series_list = [count_words_helper(f) for f in folders]
-        # s = pd.Series(filter(lambda w: w not in stop_words, df.content.str.lower().str.split(expand=True).stack())).value_counts()[:100]
-        # s = s.divide(other=sum(s))
-        # series_list.append(s)
-    # word_freq = [(k, v) for k, v in reversed(sorted(word_freq.items(), key=lambda item: item[1]))]
-    series = pd.concat(series_list, axis=1, sort=False).mean(axis=1)
-    series.sort_values(inplace=True, ascending=False)
-    # print(series[:10])
-    # print('before')
+    folders = get_all_folders()
+    num_appearances = Counter()
+    series = pd.Series([])
+    for f in folders:
+        temp_series = count_words_helper(f, min_message_threshold=1000)
+        series = pd.concat([series, temp_series], axis=1, sort=False).sum(axis=1)
+        num_appearances.update(list(temp_series.index))
+    num_appearances = pd.Series(num_appearances)
+    series = series.divide(num_appearances).sort_values(ascending=False)
     return series
