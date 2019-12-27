@@ -56,7 +56,7 @@ def total_messages_per_year(start_year=2010, end_year=2019, partition_by_sender=
         for year in range(start_year, end_year+1):
             year_path = files.get_path_for_year(year)
             messages_list.append((str(year), messages.count_messages(year_path)))
-        graphs.simple_bar_graph(list(map(lambda x: x[0], messages)), list(map(lambda x: x[1], messages_list)), 'Year', 'Number of Messages', 'Total Messages by Year')
+        graphs.simple_bar_graph(list(map(lambda x: x[0], messages_list)), list(map(lambda x: x[1], messages_list)), 'Year', 'Number of Messages', 'Total Messages by Year')
     if partition_by_sender:
         dm_messages = []
         gc_messages = []
@@ -100,13 +100,13 @@ def top_k_most_messages_by_year(year, k=10, group_chat=False, partition_by_sende
     else:
         messages_list = []
         for f in folders:
-            if len(messages) < k:
+            if len(messages_list) < k:
                 messages_list.append((messages.count_messages(f), files.get_id_from_path(f, clean=True)))
-                if len(messages) == k-1:
-                    heapq.heapify(messages)
+                if len(messages_list) == k-1:
+                    heapq.heapify(messages_list)
             else:
                 count = messages.count_messages(f)
-                if count > messages[0][0]:
+                if count > messages_list[0][0]:
                     heapq.heappush(messages_list, (count, files.get_id_from_path(f, clean=True)))
                     heapq.heappop(messages_list)
         messages_list = heapq.nsmallest(k, messages_list)
