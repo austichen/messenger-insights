@@ -12,11 +12,11 @@ import utils.graphs as graphs
 
 register_matplotlib_converters()
 
-def word_frequency(chat_id=None, k=10, start_year=2010, end_year=2019):
+def word_frequency(chat_id, k=10, start_year=2010, end_year=2019):
     f = files.get_folder_by_chat_id(chat_id)
     freqs = messages.get_word_frequencies(f, start_year, end_year)[:k]
     # freqs = pd.concat(freqs_list, axis=1, sort=False).sum(axis=1)[:10]
-    graphs.simple_bar_graph(freqs.index, freqs.round(2), 'Word', 'Relative Frequency to Mean', f'Most Frequent Words for {chat_id}')
+    graphs.simple_bar_graph(freqs.index, freqs.round(2), 'Word', 'Relative Frequency to Mean', f'Most Frequent Words for {chat_id} [{str(start_year)}, {str(end_year)}]')
 
 def compare_most_active_time(year_list, chat_id=None, time='hour'):
     folders = files.get_all_folders() if not chat_id else [files.get_folder_by_chat_id(chat_id)]
@@ -47,7 +47,7 @@ def most_active_time(chat_id=None, start_year=2010, end_year=2019, time='hour'):
         get_func = messages.get_monthly_count
     count_series = [get_func(f, start_year, end_year) for f in folders]
     counts = pd.concat(count_series, axis=1, sort=False).sum(axis=1).astype('int')
-    title = f'Most Active {time} of Day from {str(start_year)} to {str(end_year)}' if not chat_id else f'Most Active {time} for Chat {chat_id} from {str(start_year)} to {str(end_year)}'
+    title = f'Most Active {time} of Day [{str(start_year)}, {str(end_year)}]' if not chat_id else f'Most Active {time} for Chat {chat_id} [{str(start_year)}, {str(end_year)}]'
     graphs.simple_bar_graph(counts.index, counts, time, 'Number of Messages', title)
     
 def total_messages_per_year(start_year=2010, end_year=2019, partition_by_sender=False):
@@ -56,7 +56,7 @@ def total_messages_per_year(start_year=2010, end_year=2019, partition_by_sender=
         for year in range(start_year, end_year+1):
             year_path = files.get_path_for_year(year)
             messages_list.append((str(year), messages.count_messages(year_path)))
-        graphs.simple_bar_graph(list(map(lambda x: x[0], messages_list)), list(map(lambda x: x[1], messages_list)), 'Year', 'Number of Messages', 'Total Messages by Year')
+        graphs.simple_bar_graph(list(map(lambda x: x[0], messages_list)), list(map(lambda x: x[1], messages_list)), 'Year', 'Number of Messages', f'Total Messages by Year [{str(start_year)}, {str(end_year)}]')
     if partition_by_sender:
         dm_messages = []
         gc_messages = []
@@ -75,7 +75,7 @@ def total_messages_per_year(start_year=2010, end_year=2019, partition_by_sender=
         dm_plot_y = list(map(lambda x: x[1], dm_messages))
         gc_plot_y = list(map(lambda x: x[1], gc_messages))
         label_x = list(map(lambda x: x[0], gc_messages))
-        graphs.partitioned_bar_graph(label_x, dm_plot_y, gc_plot_y, 'dm', 'group chat', 'Year', 'Number of Messages', 'Total Messages by Year')
+        graphs.partitioned_bar_graph(label_x, dm_plot_y, gc_plot_y, 'dm', 'group chat', 'Year', 'Number of Messages', f'Total Messages by Year [{str(start_year)}, {str(end_year)}]')
 
 def top_k_most_messages_by_year(year, k=10, group_chat=False, partition_by_sender=False):
     folders = files.get_folders_by_year(year, group_chat=group_chat)
@@ -145,7 +145,7 @@ def top_k_messages_in_range(start_year, end_year, k=10, group_chat=False, partit
         my_plot_y = list(map(lambda x: x[2], top_k_messages))
         sender_plot_y = list(map(lambda x: x[3], top_k_messages))
         plot_x = list(map(lambda x: x[1], top_k_messages))
-        graphs.partitioned_bar_graph(plot_x, my_plot_y, sender_plot_y, 'Me', 'Them', 'Person', 'Number of Messages', 'Top ' + str(k) + ' Messages from ' + str(start_year) + ' to ' + str(end_year))
+        graphs.partitioned_bar_graph(plot_x, my_plot_y, sender_plot_y, 'Me', 'Them', 'Person', 'Number of Messages', f'Top {str(k)} Messages [{str(start_year)}, {str(end_year)}]')
     else:
         messages_list = defaultdict(int)
         for year in range(start_year, end_year+1):
@@ -167,7 +167,7 @@ def top_k_messages_in_range(start_year, end_year, k=10, group_chat=False, partit
         top_k_messages = heapq.nsmallest(k, top_k_messages)
         plot_x = list(map(lambda x: files.get_id_from_path(x[1], clean=True), top_k_messages))
         plot_y = list(map(lambda x: x[0], top_k_messages))
-        graphs.simple_bar_graph(plot_x, plot_y, 'Group' if group_chat else 'Person', 'Number of Messages', 'Top ' + str(k) + ' Messages from ' + str(start_year) + ' to ' + str(end_year))
+        graphs.simple_bar_graph(plot_x, plot_y, 'Group' if group_chat else 'Person', 'Number of Messages', f'Top {str(k)} Messages [{str(start_year)}, {str(end_year)}]')
 
 def top_k_messages_all_time(k=10, group_chat=False, partition_by_sender=False):
     start_year, end_year = messages.get_start_end_years()
@@ -180,7 +180,7 @@ def group_chat_message_distribution_by_year(year, chat_id):
             message_counts = messages.count_messages(f, partition_by_sender=True)
             message_distribution = [(value, key) for key, value in message_counts.items()]
             message_distribution.sort(key=lambda x: x[0])
-            graphs.simple_bar_graph(list(map(lambda x: x[1], message_distribution)), list(map(lambda x: x[0], message_distribution)), 'Person', 'Number of Messages', 'Message Distribution For ' + chat_id + ' in ' + str(year))
+            graphs.simple_bar_graph(list(map(lambda x: x[1], message_distribution)), list(map(lambda x: x[0], message_distribution)), 'Person', 'Number of Messages', f'Message Distribution For {chat_id} in {str(year)}')
             return
     raise Exception('Group chat with id ' + chat_id + ' not found in year ' + str(year))
 
