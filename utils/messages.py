@@ -105,13 +105,13 @@ def get_monthly_count(folder, start_year, end_year):
 
 def get_word_frequencies(folder, start_year, end_year):
     stop_words = set(stopwords.words('english'))
-    avg_freq = get_average_word_frequencies()
-    word_counts = count_words_helper(folder)
+    avg_freq = get_average_word_frequencies(start_year, end_year)
+    word_counts = count_words_helper(folder, start_year, end_year)
     word_counts = word_counts.divide(other=sum(word_counts))
     word_counts = word_counts.divide(avg_freq).sort_values(ascending=False)
     return word_counts
 
-def count_words_helper(f, min_message_threshold=0):
+def count_words_helper(f, start_year, end_year, min_message_threshold=0):
     stop_words = set(stopwords.words('english'))
     with open(os.path.join(f, 'metadata.json')) as metadata:
         data = json.load(metadata)
@@ -120,6 +120,9 @@ def count_words_helper(f, min_message_threshold=0):
             stop_words.update(p.lower().split())
     word_freq = Counter()
     df = read_csv_in_folder(f)
+    datetime = pd.to_datetime(df['timestamp_ms'], unit='ms').dt.tz_localize('UTC').dt.tz_convert('US/Eastern')
+    df['year'] = datetime.dt.year
+    df = df[(df.year >= start_year) & (df.year <= end_year)]
     content = df.content
 
     # convos with small amounts of messages mess up the sample
@@ -131,19 +134,19 @@ def count_words_helper(f, min_message_threshold=0):
         try:
             text = re.sub('[^a-zA-Z\s]', '', text.lower())
         except AttributeError:
-            text = ''
+            continue
         word_freq.update(list(filter(lambda w: len(w) and w not in stop_words, text.split())))
     word_freq = pd.Series(word_freq)
     word_freq = word_freq.divide(other=sum(word_freq))
     return word_freq
 
-def get_average_word_frequencies():
+def get_average_word_frequencies(start_year, end_year):
     stop_words = set(stopwords.words('english'))
     folders = get_all_folders()
     num_appearances = Counter()
     series = pd.Series([])
     for f in folders:
-        temp_series = count_words_helper(f, min_message_threshold=1000)
+        temp_series = count_words_helper(f, start_year, end_year,min_message_threshold=1000)
         series = pd.concat([series, temp_series], axis=1, sort=False).sum(axis=1)
         num_appearances.update(list(temp_series.index))
     num_appearances = pd.Series(num_appearances)
