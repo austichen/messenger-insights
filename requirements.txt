@@ -3,4 +3,4 @@ numpy==1.16.2
 pandas==0.25.3
 PyInquirer==1.0.3
 python-dateutil==2.8.0
-nltk==3.4
+nltk==3.4.5
