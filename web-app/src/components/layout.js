@@ -7,32 +7,24 @@
 
 import React from "react"
 import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
 
-import 'semantic-ui-css/semantic.min.css'
-import './layout.css'
+import PageNumber from "./PageNumber"
+import "./layout.css"
 
-const Layout = ({ children }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `)
-
+const Layout = ({ pageNumber, children }) => {
   return (
     <>
       <div
         style={{
           margin: `0 auto`,
-          width: '90%',
-          height: '100vh'
+          width: "90%",
+          height: "100vh",
         }}
       >
-        {children}
+        <main>
+          <PageNumber pageNumber={pageNumber} />
+          {children}
+        </main>
         {/* <footer>
           © {new Date().getFullYear()}, Built with
           {` `}
