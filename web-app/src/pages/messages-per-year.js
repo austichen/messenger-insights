@@ -54,6 +54,7 @@ const MessagesPerYear = ({ data }) => {
             </h2>
 
             <GraphToggle
+                style={{marginTop: '30px'}}
                 type="bar"
                 x={x}
                 ys={[
