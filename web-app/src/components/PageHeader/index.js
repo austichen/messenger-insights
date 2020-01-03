@@ -1,2 +1,2 @@
-import PageHeader from "./pageHeader"
+import PageHeader from './pageHeader'
 export default PageHeader

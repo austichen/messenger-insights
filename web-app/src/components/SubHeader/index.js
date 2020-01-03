@@ -1,2 +1,2 @@
-import SubHeader from "./subHeader"
+import SubHeader from './subHeader'
 export default SubHeader

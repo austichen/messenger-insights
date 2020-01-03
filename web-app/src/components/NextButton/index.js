@@ -1,2 +1,2 @@
-import NextButton from "./nextButton"
+import NextButton from './nextButton'
 export default NextButton
