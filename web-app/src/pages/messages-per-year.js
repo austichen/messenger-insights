@@ -4,6 +4,7 @@ import Layout from '../components/layout'
 import { SubHeader, NextButton, GraphToggle } from '../components'
 import SEO from '../components/seo'
 import { PAGES } from '../utils/constants'
+import { groupPartitionedData } from '../utils/helpers'
 
 const numToEnglishString = n => {
     if (n >= 1000000000000) {
@@ -24,11 +25,7 @@ const MessagesPerYear = ({ data }) => {
         totalMessages,
     } = data.stats.edges[0].node.messagesPerYear.observations
 
-    const messagesPerYear = {
-        dm: y.map(messages => messages.dm),
-        gc: y.map(messages => messages.gc),
-        total: y.map(messages => messages.dm + messages.gc),
-    }
+    const messagesPerYear = groupPartitionedData(y)
 
     const totalMessagesStr = numToEnglishString(totalMessages)
     const numYears = x.length
