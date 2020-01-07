@@ -4,7 +4,7 @@ import Layout from '../components/layout'
 import { SubHeader, NextButton, GraphToggle } from '../components'
 import SEO from '../components/seo'
 import { PAGES } from '../utils/constants'
-import { groupPartitionedData } from '../utils/helpers'
+import { groupPartitionedData, sortXValuesDescending } from '../utils/helpers'
 
 const numToEnglishString = n => {
     if (n >= 1000000000000) {
@@ -20,22 +20,16 @@ const numToEnglishString = n => {
 
 const MessagesPerYear = ({ data }) => {
     const { x, y } = data.stats.edges[0].node.messagesPerYear.data
-    const {
-        mostActiveYears,
-        totalMessages,
-    } = data.stats.edges[0].node.messagesPerYear.observations
-
     const messagesPerYear = groupPartitionedData(y)
-
-    const totalMessagesStr = numToEnglishString(totalMessages)
+    const mostActiveYears = sortXValuesDescending(x, messagesPerYear.total)
+    const totalMessagesStr = numToEnglishString(messagesPerYear.total.reduce((acc, numMessages) => acc + numMessages))
     const numYears = x.length
-    const MAYLen = mostActiveYears.length
 
     return (
         <Layout pageNumber={1}>
             <SEO title="Page two" />
             <SubHeader colour="grey">
-                You've sent <span className="purple">{totalMessagesStr}</span>{' '}
+                You've had <span className="purple">{totalMessagesStr}</span>{' '}
                 messages over <span className="violet">{numYears}</span>{' '}
                 years...
             </SubHeader>
@@ -43,11 +37,11 @@ const MessagesPerYear = ({ data }) => {
                 {' '}
                 Your most active years were{' '}
                 <span className="green">
-                    {mostActiveYears[MAYLen - 1]}
+                    {mostActiveYears[0]}
                 </span>,{' '}
-                <span className="yellow">{mostActiveYears[MAYLen - 2]}</span>,
+                <span className="yellow">{mostActiveYears[1]}</span>,
                 and{' '}
-                <span className="orange">{mostActiveYears[MAYLen - 3]}</span>
+                <span className="orange">{mostActiveYears[2]}</span>
             </h2>
 
             <GraphToggle
@@ -85,10 +79,6 @@ export const pageQuery = graphql`
                                 dm
                                 gc
                             }
-                        }
-                        observations {
-                            mostActiveYears
-                            totalMessages
                         }
                     }
                 }

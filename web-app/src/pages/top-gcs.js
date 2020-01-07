@@ -2,14 +2,13 @@ import React from 'react'
 import { graphql } from 'gatsby'
 
 import Layout from '../components/layout'
-import { SubHeader, NextButton, GraphToggle} from '../components'
+import { SubHeader, NextButton, Graph} from '../components'
 import SEO from '../components/seo'
 import { PAGES } from '../utils/constants'
 import { groupPartitionedData } from '../utils/helpers'
 
 const TopGcs = ({ data }) => {
     const { x, y } = data.stats.edges[0].node.topGcs.data
-    const topMessages = groupPartitionedData(y)
     const topGroupChatNames = x.map((chat, i) => [chat, y[i]])
         .sort((a, b) => a[1] - b[1])
         .map(v => v[0])
@@ -27,18 +26,11 @@ const TopGcs = ({ data }) => {
                 <span className="orange">{topGroupChatNames[2]}</span> were tough
                 competition
             </h2>
-            <GraphToggle
+            <Graph
                 style={{marginTop: '30px'}}
                 type="bar"
                 x={x}
-                ys={[
-                    topMessages.total,
-                    {
-                        me: topMessages.me,
-                        them: topMessages.them,
-                    },
-                ]}
-                yToggleLabels={['Total', 'Partitioned']}
+                y={y}
                 xLabel="Group Chat"
                 yLabel="Number of Messages"
                 title="Top Group Chats"
@@ -58,10 +50,7 @@ export const pageQuery = graphql`
                     topGcs {
                         data {
                             x
-                            y {
-                                me
-                                them
-                            }
+                            y
                         }
                     }
                 }

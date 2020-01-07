@@ -13,3 +13,8 @@ export const groupPartitionedData = data => {
     groupedData.total = data.map(obj => Object.values(obj).reduce((acc, val) => acc + val))
     return groupedData
 }
+
+export const sortXValuesDescending = (x, y) => x.map((chat, i) => [chat, y[i]])
+    .sort((a, b) => a[1] - b[1])
+    .map(v => v[0])
+    .reverse()
