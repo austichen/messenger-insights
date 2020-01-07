@@ -2,22 +2,15 @@ import React from 'react'
 import { graphql } from 'gatsby'
 
 import Layout from '../components/layout'
-import { SubHeader, NextButton, Graph } from '../components'
+import { SubHeader, NextButton, GraphToggle} from '../components'
 import SEO from '../components/seo'
 import { PAGES } from '../utils/constants'
-import { PAGES } from '../utils/helpers'
+import { groupPartitionedData } from '../utils/helpers'
 
 const TopGcs = ({ data }) => {
     const { x, y } = data.stats.edges[0].node.topGcs.data
-    const topGcs = {}
-    const unpartitionedTopGcs = {}
-    x.forEach((name, idx) => {
-        const { me, them } = y[idx]
-        topGcs[name] = y[idx]
-        unpartitionedTopGcs[name] = me + them
-    })
-
-    const topMessages = Object.entries(unpartitionedTopGcs)
+    const topMessages = groupPartitionedData(y)
+    const topGroupChatNames = x.map((chat, i) => [chat, y[i]])
         .sort((a, b) => a[1] - b[1])
         .map(v => v[0])
         .reverse()
@@ -27,17 +20,25 @@ const TopGcs = ({ data }) => {
             <SEO title="Page two" />
             <SubHeader colour="grey">
                 When it came to group chats,{' '}
-                <span className="red">{topMessages[0]}</span> was always lit
+                <span className="red">{topGroupChatNames[0]}</span> was always lit
             </SubHeader>
             <h2>
-                But <span className="green">{topMessages[1]}</span>, and{' '}
-                <span className="orange">{topMessages[2]}</span> were tough
+                But <span className="green">{topGroupChatNames[1]}</span>, and{' '}
+                <span className="orange">{topGroupChatNames[2]}</span> were tough
                 competition
             </h2>
-            <Graph
+            <GraphToggle
+                style={{marginTop: '30px'}}
                 type="bar"
                 x={x}
-                y={y}
+                ys={[
+                    topMessages.total,
+                    {
+                        me: topMessages.me,
+                        them: topMessages.them,
+                    },
+                ]}
+                yToggleLabels={['Total', 'Partitioned']}
                 xLabel="Group Chat"
                 yLabel="Number of Messages"
                 title="Top Group Chats"
