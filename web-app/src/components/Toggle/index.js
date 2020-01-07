@@ -3,8 +3,6 @@ import React, { useState } from 'react'
 
 const toggleItemStyle = {
     fontSize: '0.55rem',
-    border: '1px solid black',
-    'border-radius': '5px',
     display: 'inline-block',
     padding: '0 4px',
     margin: '0 2px',
