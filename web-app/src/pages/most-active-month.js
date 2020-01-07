@@ -2,7 +2,7 @@ import React from 'react'
 import { graphql } from 'gatsby'
 
 import Layout from '../components/layout'
-import { SubHeader, NextButton } from '../components'
+import { SubHeader, NextButton, Graph } from '../components'
 import SEO from '../components/seo'
 import { PAGES } from '../utils/constants'
 import { convertXYToObj } from '../utils/helpers'
@@ -39,6 +39,14 @@ const MostActiveMonth = ({ data }) => {
                 </span>{' '}
                 the most.
             </SubHeader>
+            <Graph
+                type="bar"
+                x={x}
+                y={y}
+                xLabel="Month"
+                yLabel="Number of Messages"
+                title="Activity by Month"
+            />
             <NextButton nextPage={PAGES[4]} />
         </Layout>
     )

@@ -2,7 +2,7 @@ import React from 'react'
 import { graphql } from 'gatsby'
 
 import Layout from '../components/layout'
-import { SubHeader, NextButton } from '../components'
+import { SubHeader, NextButton, Graph } from '../components'
 import SEO from '../components/seo'
 import { PAGES } from '../utils/constants'
 import { convertXYToObj } from '../utils/helpers'
@@ -64,6 +64,14 @@ const MessagesPerYear = ({ data }) => {
                 <span className="teal">{mostActiveHours[MAHLen - 1]}</span>
             </SubHeader>
             <h2>{activityMessage}</h2>
+            <Graph
+                type="line"
+                x={x}
+                y={y}
+                xLabel="Hour"
+                yLabel="Number of Messages"
+                title="Activity by Hour"
+            />
             <NextButton nextPage={PAGES[3]} />
         </Layout>
     )

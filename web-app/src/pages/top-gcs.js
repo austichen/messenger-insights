@@ -2,9 +2,10 @@ import React from 'react'
 import { graphql } from 'gatsby'
 
 import Layout from '../components/layout'
-import { SubHeader, NextButton } from '../components'
+import { SubHeader, NextButton, Graph } from '../components'
 import SEO from '../components/seo'
 import { PAGES } from '../utils/constants'
+import { PAGES } from '../utils/helpers'
 
 const TopGcs = ({ data }) => {
     const { x, y } = data.stats.edges[0].node.topGcs.data
@@ -33,6 +34,14 @@ const TopGcs = ({ data }) => {
                 <span className="orange">{topMessages[2]}</span> were tough
                 competition
             </h2>
+            <Graph
+                type="bar"
+                x={x}
+                y={y}
+                xLabel="Group Chat"
+                yLabel="Number of Messages"
+                title="Top Group Chats"
+            />
             <NextButton nextPage={PAGES[5]} />
         </Layout>
     )
