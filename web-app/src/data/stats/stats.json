@@ -1,0 +1,92 @@
+{
+    "mostActiveHour": {
+        "data": {
+            "x": ["12am", "1am", "2am", "3am", "4am", "5am", "6am", "7am", "8am", "9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm"],
+            "y": [133249, 67575, 29032, 10718, 4520, 1962, 2486, 5588, 9994, 15660, 25846, 43984, 55056, 61115, 57411, 68911, 88830, 96889, 119898, 149861, 158086, 183966, 217292, 187172]
+        }
+    },
+    "mostActiveMonth": {
+        "data": {
+            "x": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            "y": [133901, 141722, 141939, 122813, 176583, 164879, 155227, 110965, 174066, 172349, 149556, 151101]
+        }
+    },
+    "messagesPerYear": {
+        "data": {
+            "x": ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"],
+            "y": [{
+                "dm": 6,
+                "gc": 0
+            }, {
+                "dm": 1195,
+                "gc": 0
+            }, {
+                "dm": 21697,
+                "gc": 8472
+            }, {
+                "dm": 33975,
+                "gc": 80436
+            }, {
+                "dm": 150128,
+                "gc": 164855
+            }, {
+                "dm": 358362,
+                "gc": 113889
+            }, {
+                "dm": 137758,
+                "gc": 86450
+            }, {
+                "dm": 129241,
+                "gc": 133124
+            }, {
+                "dm": 71127,
+                "gc": 159074
+            }, {
+                "dm": 69227,
+                "gc": 76085
+            }]
+        }
+    },
+    "topDms": {
+        "data": {
+            "x": ["John Doe", "Bethanie Sweet", "Kinga Dawson", "Enoch Winter", "Keyan Flowers", "Sharon Lawson", "Tolga Shaw", "Paolo Griffin", "Mikey Rahman", "Paris Barrow"],
+            "y": [{
+                "me": 4042,
+                "them": 4445
+            }, {
+                "me": 4873,
+                "them": 5372
+            }, {
+                "me": 5987,
+                "them": 5577
+            }, {
+                "me": 7053,
+                "them": 6824
+            }, {
+                "me": 8243,
+                "them": 9302
+            }, {
+                "me": 9968,
+                "them": 16996
+            }, {
+                "me": 18031,
+                "them": 16935
+            }, {
+                "me": 21163,
+                "them": 21063
+            }, {
+                "me": 61460,
+                "them": 96743
+            }, {
+                "me": 177541,
+                "them": 299377
+            }]
+        }
+    },
+    "topGcs": {
+        "data": {
+            "x": ["Photography Club", "The Avengers", "Lunchtime", "Cruise Trip", "Pizza Lovers", "League Chat", "Work Friends", "Waterloo Squad", "Elementary School Friends", "Family"],
+            "y": [9041, 11080, 17149, 33870, 35386, 44945, 59151, 92673, 107348, 307230]
+        }
+    }
+}

@@ -1,0 +1,75 @@
+html, body {
+    height: 100vh;
+    font-family: 'Lato', 'Helvetica Neue',Arial,Helvetica,sans-serif;
+    font-size: 30px;
+    margin: 0;
+}
+
+h1 {
+    margin: 0;
+}
+
+h2 {
+    margin: 0;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    filter: brightness(150%);
+}
+
+.red {
+    color: #db2828;
+}
+
+.orange {
+    color: #f2711c;
+}
+
+.yellow {
+    color: #fbbd08;
+}
+
+.olive {
+    color: #b5cc18;
+}
+
+.green {
+    color: #21ba45;
+}
+
+.blue {
+    color: #2185d0;
+}
+
+.teal {
+    color: #00b5ad;
+}
+
+.violet {
+    color: #6435c9;
+}
+
+.purple {
+    color: #a333c8;
+}
+
+.pink {
+    color: #e03997;
+}
+
+.brown {
+    color: #a5673f;
+}
+
+.grey {
+    color: #767676;
+}
+
+.black {
+    color: #1b1c1d;
+}
