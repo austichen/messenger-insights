@@ -31,7 +31,7 @@ const MostActiveMonth = ({ data }) => {
 
     return (
         <Layout pageNumber={3}>
-            <SEO title="Page two" />
+            <SEO title="Most Active Month" />
             <SubHeader colour="grey">
                 There are 12 months in a year, but you seemed to like{' '}
                 <span className="pink">

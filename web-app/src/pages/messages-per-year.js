@@ -27,7 +27,7 @@ const MessagesPerYear = ({ data }) => {
 
     return (
         <Layout pageNumber={1}>
-            <SEO title="Page two" />
+            <SEO title="Messages Per Year" />
             <SubHeader colour="grey">
                 You've had <span className="purple">{totalMessagesStr}</span>{' '}
                 messages over <span className="violet">{numYears}</span>{' '}

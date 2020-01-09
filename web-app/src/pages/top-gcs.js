@@ -5,7 +5,6 @@ import Layout from '../components/layout'
 import { SubHeader, NextButton, Graph} from '../components'
 import SEO from '../components/seo'
 import { PAGES } from '../utils/constants'
-import { groupPartitionedData } from '../utils/helpers'
 
 const TopGcs = ({ data }) => {
     const { x, y } = data.stats.edges[0].node.topGcs.data
@@ -16,7 +15,7 @@ const TopGcs = ({ data }) => {
 
     return (
         <Layout pageNumber={4}>
-            <SEO title="Page two" />
+            <SEO title="Top Group Chats" />
             <SubHeader colour="grey">
                 When it came to group chats,{' '}
                 <span className="red">{topGroupChatNames[0]}</span> was always lit

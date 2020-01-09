@@ -16,7 +16,7 @@ const TopDms = ({ data }) => {
     
     return (
         <Layout pageNumber={5}>
-            <SEO title="Page two" />
+            <SEO title="Top DMs" />
             <h2 style={{paddingTop: '20px'}}>
                 Throughout all these years, one person had your attention in particular...
             </h2>

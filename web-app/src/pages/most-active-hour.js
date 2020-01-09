@@ -58,7 +58,7 @@ const MessagesPerYear = ({ data }) => {
 
     return (
         <Layout pageNumber={2}>
-            <SEO title="Page two" />
+            <SEO title="Most Active Hour" />
             <SubHeader colour="grey">
                 You were most active at{' '}
                 <span className="teal">{mostActiveHours[MAHLen - 1]}</span>
