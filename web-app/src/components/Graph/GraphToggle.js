@@ -7,7 +7,10 @@ const GraphToggle = ({ ys, yToggleLabels, ...props }) => {
     const [activeDataset, setActiveDataset] = useState(ys[0])
 
     return (
-        <div className="graph-container" style={{position: 'relative', ...props.style}}>
+        <div
+            className="graph-container"
+            style={{ position: 'relative', ...props.style }}
+        >
             <Toggle
                 style={{
                     height: '0.6rem',

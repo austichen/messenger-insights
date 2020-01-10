@@ -9,16 +9,18 @@ import { groupPartitionedData } from '../utils/helpers'
 const TopDms = ({ data }) => {
     const { x, y } = data.stats.edges[0].node.topDms.data
     const topMessages = groupPartitionedData(y)
-    const topDmNames = x.map((chat, i) => [chat, y[i]])
+    const topDmNames = x
+        .map((chat, i) => [chat, y[i]])
         .sort((a, b) => a[1] - b[1])
         .map(v => v[0])
         .reverse()
-    
+
     return (
         <Layout pageNumber={5}>
             <SEO title="Top DMs" />
-            <h2 style={{paddingTop: '20px'}}>
-                Throughout all these years, one person had your attention in particular...
+            <h2 style={{ paddingTop: '20px' }}>
+                Throughout all these years, one person had your attention in
+                particular...
             </h2>
             <SubHeader colour="grey">
                 You spent the most time talking to{' '}
@@ -27,7 +29,7 @@ const TopDms = ({ data }) => {
                 <span className="blue">{topDmNames[2]}</span> right behind
             </SubHeader>
             <GraphToggle
-                style={{marginTop: '30px'}}
+                style={{ marginTop: '30px' }}
                 type="bar"
                 x={x}
                 ys={[

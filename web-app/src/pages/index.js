@@ -6,7 +6,7 @@ import { PageHeader, SubHeader } from '../components'
 import Layout from '../components/layout'
 import SEO from '../components/seo'
 
-const IndexPage = ({data}) => (
+const IndexPage = ({ data }) => (
     <Layout pageNumber={0}>
         <SEO title="Home" />
         <PageHeader colour="grey" style={{ paddingTop: '10%' }}>
@@ -14,7 +14,10 @@ const IndexPage = ({data}) => (
         </PageHeader>
         <SubHeader>
             You've been using <span className="blue">Messenger</span> since{' '}
-            <span className="teal">{data.stats.edges[0].node.metadata.startYear}</span>.
+            <span className="teal">
+                {data.stats.edges[0].node.metadata.startYear}
+            </span>
+            .
         </SubHeader>
         <SubHeader>Why don't we take a stroll down memory lane?</SubHeader>
         <SubHeader>

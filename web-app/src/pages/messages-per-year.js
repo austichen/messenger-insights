@@ -22,7 +22,9 @@ const MessagesPerYear = ({ data }) => {
     const { x, y } = data.stats.edges[0].node.messagesPerYear.data
     const messagesPerYear = groupPartitionedData(y)
     const mostActiveYears = sortXValuesDescending(x, messagesPerYear.total)
-    const totalMessagesStr = numToEnglishString(messagesPerYear.total.reduce((acc, numMessages) => acc + numMessages))
+    const totalMessagesStr = numToEnglishString(
+        messagesPerYear.total.reduce((acc, numMessages) => acc + numMessages)
+    )
     const numYears = x.length
 
     return (
@@ -36,16 +38,13 @@ const MessagesPerYear = ({ data }) => {
             <h2>
                 {' '}
                 Your most active years were{' '}
-                <span className="green">
-                    {mostActiveYears[0]}
-                </span>,{' '}
-                <span className="yellow">{mostActiveYears[1]}</span>,
-                and{' '}
+                <span className="green">{mostActiveYears[0]}</span>,{' '}
+                <span className="yellow">{mostActiveYears[1]}</span>, and{' '}
                 <span className="orange">{mostActiveYears[2]}</span>
             </h2>
 
             <GraphToggle
-                style={{marginTop: '30px'}}
+                style={{ marginTop: '30px' }}
                 type="bar"
                 x={x}
                 ys={[
