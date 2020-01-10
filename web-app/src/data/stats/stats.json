@@ -88,5 +88,10 @@
             "x": ["Photography Club", "The Avengers", "Lunchtime", "Cruise Trip", "Pizza Lovers", "League Chat", "Work Friends", "Waterloo Squad", "Elementary School Friends", "Family"],
             "y": [9041, 11080, 17149, 33870, 35386, 44945, 59151, 92673, 107348, 307230]
         }
+    },
+    "metadata": {
+        "startYear": 2010,
+        "endYear": 2019,
+        "name": "Austin Chen"
     }
 }
