@@ -1,8 +1,8 @@
 <p align="center">
     <img alt="Messenger Insights" src="https://user-images.githubusercontent.com/35405685/72289479-3802a080-3619-11ea-91a2-e74b6f39aba5.png" width="250" />
-</p>
-
+    <br/>
 CLI tool and web app to calculate and display cool stats about your messenger history 👀
+</p>
 
 ## CLI Tool
 
