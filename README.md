@@ -18,7 +18,7 @@ Examples:
 
 ### Usage
 
-1. [Download your Facebook Messenger data](https://www.zapptales.com/en/download-facebook-messenger-chat-history-how-to/). Extract the files to a directory of your choice. After you're done, your directory should have the following structure:
+1. [Download your Facebook Messenger data](https://www.zapptales.com/en/download-facebook-messenger-chat-history-how-to/) **in JSON format**. Extract the files to a directory of your choice. After you're done, your directory should have the following structure:
 ```
 D:/your/path/to/facebook-data
 ├── archived_threads
