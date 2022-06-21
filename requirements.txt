@@ -1,5 +1,5 @@
 matplotlib==3.0.3
-numpy==1.16.2
+numpy==1.22.0
 pandas==0.25.3
 PyInquirer==1.0.3
 python-dateutil==2.8.0
